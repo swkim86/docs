@@ -1,0 +1,204 @@
+ProjectResponse:
+  type: object
+  properties:
+    id:
+      type: string
+      description: Project ID
+    projectName:
+      type: string
+      description: Project name
+    apiKey:
+      type: string
+      description: Project API key
+    status:
+      type: string
+      description: Project status
+      enum:
+        - CREATING
+        - ACTIVE
+        - DELETING
+
+IndexCreateRequest:
+  type: object
+  properties:
+    indexName:
+      type: string
+      description: Index name
+    mappings:
+      $ref: '#/Mappings'
+
+IndexResponse:
+  type: object
+  properties:
+    projectId:
+      type: string
+      description: Project id
+    indexName:
+      type: string
+      description: Index name
+    mappings:
+      $ref: '#/Mappings'
+    numDocs:
+      type: integer
+      description: Number of documents
+    indexStatus:
+      type: string
+      enum:
+        - CREATING
+        - ACTIVE
+        - DELETING
+      description: Index status
+
+FieldConfig:
+  type: object
+  oneOf:
+    - properties: # text type
+        type:
+          type: string
+          enum:
+            - text
+        analyzers:
+          type: array
+          description: Analyzers
+          items:
+            type: string
+            enum:
+              - standard
+              - korean
+              - japanese
+              - english
+          default: standard
+      additionalProperties: false
+      required:
+        - type
+    - properties: # vector type
+        type:
+          type: string
+          enum:
+            - vector
+        dimensions:
+          type: integer
+          description: Vector dimensions
+        similarity:
+          type: string
+          description: Vector similarity metric
+          enum:
+            - cosine
+            - l2_norm
+            - dot_product
+            - max_inner_product
+          default: cosine
+      additionalProperties: false
+      required:
+        - type
+        - dimensions
+    - properties: # keyword, long, double, datetime, boolean types
+        type:
+          type: string
+          enum:
+            - keyword
+            - long
+            - double
+            - datetime
+            - boolean
+      description: Types that do not need additional parameters
+      additionalProperties: false
+      required: type
+
+Mappings:
+  type: object
+  additionalProperties:
+    $ref: '#/FieldConfig'
+
+QueryRequest:
+  type: object
+  properties:
+    size:
+        type: integer
+        description: Number of documents to return
+    query:
+        type: object
+        description: Query object
+    consistentRead:
+        type: boolean
+        default: false
+    includeVectors:
+      type: boolean
+      default: false
+  required:
+    - size
+    - query
+
+QueryResult:
+  type: object
+  properties:
+      index:
+        type: string
+        description: Index name
+      score:
+        type: number
+        description: Document similarity score
+      doc:
+        type: object
+  required:
+      - index
+      - score
+      - doc
+
+DocumentFetchRequest:
+  type: object
+  properties:
+    ids:
+      type: array
+      items:
+        type: string
+      description: Document ID list
+      example: [ "1", "2", "3" ]
+    consistentRead:
+      type: boolean
+      default: false
+    includeVectors:
+      type: boolean
+      default: false
+  required:
+    - ids
+
+DocumentFetchResult:
+  type: object
+  properties:
+    index:
+      type: string
+      description: Index name
+    doc:
+      type: object
+  required:
+    - index
+    - doc
+
+DocumentUpsertRequest:
+  type: object
+  properties:
+    documents:
+      type: array
+      items:
+        type: object
+      description: Document list
+  required:
+    - documents
+
+DocumentDeleteRequest:
+  type: object
+  properties:
+    ids:
+      type: array
+      items:
+        type: string
+      description: Document ID list
+      example: [ "1", "2", "3" ]
+#    filter:
+#      type: string
+#      description: Query filter
+#      example: "myTextField:text"
+  required:
+    - ids
+

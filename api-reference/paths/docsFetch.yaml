@@ -1,0 +1,31 @@
+post:
+  description: Fetch document
+  parameters:
+    - $ref: '../components/parameters.yaml#/ContentTypeHeader'
+    - $ref: '../components/parameters.yaml#/ProjectAPIKey'
+    - $ref: '../components/parameters.yaml#/ProjectID'
+    - $ref: '../components/parameters.yaml#/IndexName'
+  requestBody:
+    content:
+      application/json:
+        schema:
+          $ref: '../components/schemas.yaml#/DocumentFetchRequest'
+
+  responses:
+    200:
+      description: Fetch success
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              total:
+                type: integer
+                description: Total number of documents returned
+              took:
+                type: integer
+                description: Elapsed time in milliseconds
+              docs:
+                type: array
+                items:
+                  $ref: '../components/schemas.yaml#/DocumentFetchResult'

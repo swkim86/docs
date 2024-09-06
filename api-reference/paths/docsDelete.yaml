@@ -1,0 +1,21 @@
+post:
+  description: Delete Document
+  parameters:
+    - $ref: '../components/parameters.yaml#/ContentTypeHeader'
+    - $ref: '../components/parameters.yaml#/ProjectAPIKey'
+    - $ref: '../components/parameters.yaml#/ProjectID'
+    - $ref: '../components/parameters.yaml#/IndexName'
+  requestBody:
+    content:
+      application/json:
+        schema:
+          $ref: '../components/schemas.yaml#/DocumentDeleteRequest'
+
+  responses:
+    202:
+      description: Delete request accepted
+      content:
+        application/json:
+          schema:
+            type: string
+            default: "Delete request is accepted"

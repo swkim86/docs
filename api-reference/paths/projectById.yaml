@@ -1,0 +1,27 @@
+get:
+  description: Describe a project
+  parameters:
+    - $ref: '../components/parameters.yaml#/ContentTypeHeader'
+    - $ref: '../components/parameters.yaml#/AdminAPIKey'
+    - $ref: '../components/parameters.yaml#/ProjectID'
+  responses:
+    200:
+      description: Describe project success
+      content:
+        application/json:
+          schema:
+            $ref: '../components/schemas.yaml#/ProjectResponse'
+delete:
+  description: Delete a project
+  parameters:
+    - $ref: '../components/parameters.yaml#/ContentTypeHeader'
+    - $ref: '../components/parameters.yaml#/AdminAPIKey'
+    - $ref: '../components/parameters.yaml#/ProjectID'
+  responses:
+    202:
+      description: Project delete request accepted
+      content:
+        application/json:
+          schema:
+            type: string
+            default: "Project {projectId} is queued for deletion"

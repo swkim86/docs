@@ -1,0 +1,50 @@
+# https://swagger.io/specification/
+openapi: 3.0.3
+info:
+  title: Wrtn AIMP API
+  description: Wrtn AIMP Open API Spec
+  version: 1.0.0
+servers:
+  - url: https://{baseUrl}/{env}/{version}
+    description: 'AIMP API endpoint'
+    variables:
+      baseUrl:
+        enum:
+          - n8rgvqrolh.execute-api.ap-northeast-2.amazonaws.com # dev
+        default: n8rgvqrolh.execute-api.ap-northeast-2.amazonaws.com
+      env:
+        enum:
+          - prod
+          - dev
+          - test
+        default: dev
+      version:
+        enum:
+          - v1alpha1
+          - v1alpha2
+        default: v1alpha2
+
+paths:
+  /projects:
+    $ref: 'paths/projects.yaml'
+
+  /projects/{projectId}:
+    $ref: 'paths/projectById.yaml'
+
+  /projects/{projectId}/indexes:
+    $ref: 'paths/indexes.yaml'
+
+  /projects/{projectId}/indexes/{indexName}:
+    $ref: 'paths/indexByName.yaml'
+
+  /projects/{projectId}/indexes/{indexName}/docs/upsert:
+    $ref: 'paths/docsUpsert.yaml'
+
+  /projects/{projectId}/indexes/{indexName}/docs/delete:
+    $ref: 'paths/docsDelete.yaml'
+
+  /projects/{projectId}/indexes/{indexName}/docs/fetch:
+    $ref: 'paths/docsFetch.yaml'
+
+  /projects/{projectId}/indexes/{indexName}/query:
+    $ref: 'paths/docsQuery.yaml'

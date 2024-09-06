@@ -1,0 +1,35 @@
+get:
+  description: List indexes in a project
+  parameters:
+    - $ref: '../components/parameters.yaml#/ContentTypeHeader'
+    - $ref: '../components/parameters.yaml#/ProjectAPIKey'
+    - $ref: '../components/parameters.yaml#/ProjectID'
+  responses:
+    200:
+      description: List indexes success
+      content:
+        application/json:
+          schema:
+            type: array
+            items:
+              $ref: '../components/schemas.yaml#/IndexResponse'
+
+post:
+  description: Create a index
+  parameters:
+    - $ref: '../components/parameters.yaml#/ContentTypeHeader'
+    - $ref: '../components/parameters.yaml#/ProjectAPIKey'
+    - $ref: '../components/parameters.yaml#/ProjectID'
+  requestBody:
+    content:
+      application/json:
+        schema:
+          $ref: '../components/schemas.yaml#/IndexCreateRequest'
+
+  responses:
+    202:
+      description: Index creation request accepted
+      content:
+        application/json:
+          schema:
+            $ref: '../components/schemas.yaml#/IndexResponse'
