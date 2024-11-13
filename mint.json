@@ -18,34 +18,13 @@
   "topbarLinks": [
     {
       "name": "Support",
-      "url": "mailto:hi@mintlify.com"
+      "url": "mailto:alan@wrtn.io"
     }
   ],
-  "topbarCtaButton": {
-    "name": "Dashboard",
-    "url": "https://dashboard.mintlify.com"
-  },
   "tabs": [
     {
       "name": "API Reference",
       "url": "api-reference"
-    }
-  ],
-  "anchors": [
-    {
-      "name": "Documentation",
-      "icon": "book-open-cover",
-      "url": "https://mintlify.com/docs"
-    },
-    {
-      "name": "Community",
-      "icon": "slack",
-      "url": "https://mintlify.com/community"
-    },
-    {
-      "name": "Blog",
-      "icon": "newspaper",
-      "url": "https://mintlify.com/blog"
     }
   ],
   "navigation": [
@@ -53,33 +32,73 @@
       "group": "Get Started",
       "pages": [
         "introduction",
-        "quickstart",
-        "development"
+        {
+          "group": "Guides",
+          "pages": [
+            {
+              "group": "Query DSL",
+              "pages": [
+                "guides/query/info",
+                "guides/query/query",
+                "guides/query/field-type",
+                "guides/query/mappings",
+                {
+                  "group": "Primary Query",
+                  "pages": [
+                    "guides/query/primary-query/query-string",
+                    "guides/query/primary-query/vector"
+                  ]
+                },
+                {
+                  "group": "Compound Query",
+                  "pages": [
+                    "guides/query/compound-query/bool",
+                    "guides/query/compound-query/boost",
+                    "guides/query/compound-query/occur",
+                    "guides/query/compound-query/hybrid"
+                  ]
+                },
+                "guides/query/query-limits",
+                "guides/fetch/fetch"
+              ]
+            }
+          ]
+        }
       ]
     },
     {
-      "group": "Essentials",
+      "group": "API Reference",
       "pages": [
-        "essentials/markdown",
-        "essentials/code",
-        "essentials/images",
-        "essentials/settings",
-        "essentials/navigation",
-        "essentials/reusable-snippets"
-      ]
-    },
-    {
-      "group": "API Documentation",
-      "pages": [
-        "api-reference/introduction"
-      ]
-    },
-    {
-      "group": "Endpoint Examples",
-      "pages": [
-        "api-reference/endpoint/get",
-        "api-reference/endpoint/create",
-        "api-reference/endpoint/delete"
+        "api-reference/introduction",
+        {
+          "group": "Projects",
+          "pages": [
+            "api-reference/endpoint/project-create",
+            "api-reference/endpoint/project-delete",
+            "api-reference/endpoint/project-list",
+            "api-reference/endpoint/project-describe"
+          ]
+        },
+        {
+          "group": "Indexes",
+          "pages": [
+            "api-reference/endpoint/index-create",
+            "api-reference/endpoint/index-delete",
+            "api-reference/endpoint/index-describe",
+            "api-reference/endpoint/index-list"
+          ]
+        },
+        {
+          "group": "Documents",
+          "pages": [
+            "api-reference/endpoint/document-upsert",
+            "api-reference/endpoint/document-fetch",
+            "api-reference/endpoint/document-query",
+            "api-reference/endpoint/document-delete",
+            "api-reference/endpoint/document-get-bulk-upsert-url",
+            "api-reference/endpoint/document-bulk-upsert"
+          ]
+        }
       ]
     }
   ],
