@@ -1,0 +1,62 @@
+---
+title: Hybrid
+---
+
+예를 들어, 사용자는 특정 Url에서 파생된 다수의 콘텐츠 조각들에서 사용자의 특정 질문과 가장 유사한 콘텐츠 조각을 찾고 싶습니다.
+
+더불어 가장 중요하게 여겨지는 특정 Term이 사용된 문서에 점수를 가산하여 최종 검색 결과에 반영하고 싶습니다.
+
+이 경우, Term-base Query string + Vector query(with. Filter query)가 결합된 형태의 이른바, Hybrid query를 수행할 수 있습니다.
+
+## Examples
+
+```json
+{
+    size: 10,
+    "query": {
+        "bool": [
+            {
+                "queryString": {
+                    "query": "content:AIMP",
+                },
+                "occur": "should", // 일치하는 문서는 점수에 반영
+                "boost": 0.7 // score * 0.7
+            },
+            {
+                "knn": {
+                    "filter" : { // Filter query에 해당하는 문서로 1차 필터링
+                            "queryString": {
+                                "query": "\"https://wrtn.io\"",
+                                "defaultField": "metadata.url"
+                            }
+                        },
+                    "field": "text_embedding",
+                    "queryVector": [ ... {float array} ... ],
+                    "k": 5, // top5 문서에게만 점수를 부여
+                    "numCandidates": 20 // 높은 재현율을 위해 numCandidates를 k보다 크게 설정
+                },
+                "occur": "should", // 일치한다면 점수 부여
+                "boost": 0.3 // score * 0.3
+            }
+        ]
+    }
+}
+```
+
+위 예제를 설명하자면 다음과 같습니다.
+
+총 두 개의 쿼리를 Bool query로 묶어 Query string과 Vector query가 결합된 Hybrid query를 수행합니다.
+
+1. queryString에 들어간 `AIMP` 에 매칭되는 문서의 점수에는 0.7가 boost되어 계산됩니다.
+2. knn에서는 Filter query로 1차 문서 필터링이 진행되며 이후, Vector query가 진행되며 가장 유사한 top5의 점수에 0.3이 boost되어 계산됩니다.
+3. 합산된 점수가 가장 높은 10개의 문서가 반환됩니다.
+
+<Warning>
+
+최종 반환 문서에는 Knn query의 top5 문서가 포함되지 않을 수 있습니다.
+
+queryString에서만 반환된 문서들의 점수가 Knn에서 반환된 top5 문서들의 점수 보다 클 수 있기 때문입니다.
+
+만일, Knn의 문서가 반드시 포함되면서 점수에도 영향을 미치길 바란다면, Knn의 occur를 must로 수정해야 합니다.
+
+</Warning>

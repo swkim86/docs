@@ -1,0 +1,109 @@
+---
+title: Field Type
+---
+
+AIMP는 8가지의 Field Type을 지원하며, 이를 바탕으로 문서를 정의합니다.
+
+**모든 Field는 Type에 관계없이 반드시 저장**되지만, 저장이 된다고 해서 반드시 검색 가능한 것은 아닙니다.
+
+각 필드의 특성에 맞는 적절한 Type을 선택해 인덱스를 최적화할 수 있습니다.
+
+## Parameters
+
+| Field Type | Parameter     | Required | Type     | Limitation                                                               | Defualt  |
+| ---------- | ------------- | -------- | -------- | ------------------------------------------------------------------------ | -------- |
+| text       | analyzers     |          | String[] | korean, japanese, english, standard                                      | standard |
+| vector     | dimensions    | ✓        | int      | size의 값은 4096보다 작거나 같아야 합니다.                               |          |
+|            | similarity    | ✓        | String   | l2_norm(euclidean), dot_product, cosine, max_inner_product               | l2_norm  |
+| keyword    | -             |          |          | ignore_above : 4096                                                      |          |
+| datetime   | -             |          |          | ISO_DATE_TIME 형식을 따라야 합니다.                                      |          |
+| object     | objectMapping |          | Mappings | objectMapping을 지정하지 않으면, blob형태로 저장되고 검색할 수 없습니다. |          |
+| boolean    | -             |          |          |                                                                          |          |
+
+## text
+
+유저가 설정한 Analyzer를 바탕으로 토큰화되며, 검색 가능한 형태로 인덱싱됩니다.
+
+토큰화에 사용되는 Analyzer는 `korean`, `japanese`, `english`, `standard`(default)를 지원합니다.
+
+여러 Analyzer를 하나의 Field에 지정해 검색 성능을 향상시킬 수 있습니다.
+
+## keyword
+
+Field의 전체 문자열이 단일 Term으로 토큰화되며, 검색 가능한 형태로 인덱싱됩니다.
+
+모든 글자가 동일해야 의미있는 값(ex. url, e-mail address)을 저장하는 데 사용될 수 있습니다.
+
+4096자 이상의 문자열은 토큰화되지 않은 상태로 인덱싱되어 검색 대상에서 제외됩니다.
+
+## long
+
+Scoring, Sorting, Range 등에 최적화된 방식으로 숫자를 저장하며, 검색 가능한 형태로 인덱싱됩니다.
+
+## double
+
+Scoring, Sorting, Range 등에 최적화된 방식으로 부동소수점 수를 저장하며, 검색 가능한 형태로 인덱싱됩니다.
+
+## boolean
+
+적은 저장공간을 소비하여 불리언 값을 저장하며, 검색 가능한 형태로 인덱싱됩니다.
+
+## datetime
+
+[시간을 나타내는 `ISO_DATE_TIME` 의 문자열](https://docs.oracle.com/javase/8/docs/api/java/time/format/DateTimeFormatter.html#ISO_DATE_TIME)을 검색 가능한 형태로 인덱싱합니다.
+
+Range query를 수행하거나 매칭되는 특정 시간을 검색할 수 있습니다.
+
+```python
+import pytz
+from datetime import datetime
+
+dt = datetime.now()
+print(dt.astimezone(pytz.UTC).isoformat(timespec="seconds"))
+
+# 2024-11-05T14:27:56+00:00
+```
+
+## object
+
+복잡한 스키마를 지닌 값을 Blob 형식으로 저장합니다.
+
+objectMapping을 지정해, 검색 가능한 형태로 인덱싱할 수 있습니다.
+
+```json
+// mappings
+{
+	"content": {
+    "type": "text",
+    "analyzers": ["english", "korean", "japanese"]
+  },
+  "metadata": {
+    "type": "object",
+    "objectMapping": {
+      "url": {"type": "keyword"},
+      "author": {"type": "keyword"},
+    },
+  },
+}
+
+// query
+query = {
+    "size": 10,
+    "query": {
+      "queryString": {
+          "query": "metadata.author:alan AND content:awesome" // nested field 검색을 위해 .(dot)으로 연결하여 검색 수행
+	         // 다중 analyzer가 사용된 content field 검색은 analyzer 별로 검색되고, score를 합산하여 유사도를 계산
+      }
+    }
+}
+```
+
+## vector
+
+고정된 차원을 지닌 Float array 형태의 vector를 저장하며, 검색 가능한 형태로 인덱싱됩니다.
+
+vector Field의 유사도는 Qeury vector와 인덱싱된 vector 사이의 거리를 Similarity 통해 계산됩니다.
+
+Similarity는 `l2_norm(euclidean)`, `dot_product`, `cosine`, `max_inner_product` 을 지원합니다.
+
+vector의 dimension은 최대 4096까지 설정할 수 있습니다.

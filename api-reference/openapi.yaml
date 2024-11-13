@@ -1,50 +1,891 @@
-# https://swagger.io/specification/
-openapi: 3.0.3
-info:
-  title: Wrtn AIMP API
-  description: Wrtn AIMP Open API Spec
-  version: 1.0.0
-servers:
-  - url: https://{baseUrl}/{env}/{version}
-    description: 'AIMP API endpoint'
-    variables:
-      baseUrl:
-        enum:
-          - n8rgvqrolh.execute-api.ap-northeast-2.amazonaws.com # dev
-        default: n8rgvqrolh.execute-api.ap-northeast-2.amazonaws.com
-      env:
-        enum:
-          - prod
-          - dev
-          - test
-        default: dev
-      version:
-        enum:
-          - v1alpha1
-          - v1alpha2
-        default: v1alpha2
-
-paths:
-  /projects:
-    $ref: 'paths/projects.yaml'
-
-  /projects/{projectId}:
-    $ref: 'paths/projectById.yaml'
-
-  /projects/{projectId}/indexes:
-    $ref: 'paths/indexes.yaml'
-
-  /projects/{projectId}/indexes/{indexName}:
-    $ref: 'paths/indexByName.yaml'
-
-  /projects/{projectId}/indexes/{indexName}/docs/upsert:
-    $ref: 'paths/docsUpsert.yaml'
-
-  /projects/{projectId}/indexes/{indexName}/docs/delete:
-    $ref: 'paths/docsDelete.yaml'
-
-  /projects/{projectId}/indexes/{indexName}/docs/fetch:
-    $ref: 'paths/docsFetch.yaml'
-
-  /projects/{projectId}/indexes/{indexName}/query:
-    $ref: 'paths/docsQuery.yaml'
+{
+  "openapi": "3.0.3",
+  "info": {
+    "title": "Wrtn AIMP API",
+    "description": "Wrtn AIMP Open API Spec",
+    "version": "v1alpha2"
+  },
+  "servers": [
+    {
+      "url": "https://{baseUrl}/{env}/{version}",
+      "description": "AIMP API endpoint",
+      "variables": {
+        "baseUrl": {
+          "enum": [
+            "n8rgvqrolh.execute-api.ap-northeast-2.amazonaws.com"
+          ],
+          "default": "n8rgvqrolh.execute-api.ap-northeast-2.amazonaws.com"
+        },
+        "env": {
+          "enum": [
+            "prod",
+            "dev",
+            "test"
+          ],
+          "default": "dev"
+        },
+        "version": {
+          "enum": [
+            "v1alpha1",
+            "v1alpha2"
+          ],
+          "default": "v1alpha2"
+        }
+      }
+    }
+  ],
+  "components": {
+    "parameters": {
+      "ContentType": {
+        "in": "header",
+        "name": "Content-Type",
+        "required": true,
+        "schema": {
+          "type": "string",
+          "default": "application/json"
+        }
+      },
+      "AdminApiKey": {
+        "in": "header",
+        "name": "x-api-key",
+        "description": "Admin API Key",
+        "required": true,
+        "schema": {
+          "type": "string",
+          "description": "Admin API Key"
+        }
+      },
+      "ProjectApiKey": {
+        "in": "header",
+        "name": "x-api-key",
+        "description": "Project API Key",
+        "required": true,
+        "schema": {
+          "type": "string",
+          "description": "Project API Key"
+        }
+      },
+      "ProjectId": {
+        "in": "path",
+        "name": "projectId",
+        "required": true,
+        "schema": {
+          "type": "string"
+        }
+      },
+      "IndexName": {
+        "in": "path",
+        "name": "indexName",
+        "required": true,
+        "schema": {
+          "type": "string"
+        }
+      }
+    }
+  },
+  "paths": {
+    "/projects": {
+      "get": {
+        "description": "List projects",
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/ContentType"
+          },
+          {
+            "$ref": "#/components/parameters/AdminApiKey"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "List projects success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/paths/~1projects/post/responses/200/content/application~1json/schema"
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "description": "Create a project",
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/ContentType"
+          },
+          {
+            "$ref": "#/components/parameters/AdminApiKey"
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "projectName": {
+                    "type": "string"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Create project success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "id": {
+                      "type": "string",
+                      "description": "Project ID"
+                    },
+                    "projectName": {
+                      "type": "string",
+                      "description": "Project name"
+                    },
+                    "apiKey": {
+                      "type": "string",
+                      "description": "Project API key"
+                    },
+                    "status": {
+                      "type": "string",
+                      "description": "Project status",
+                      "enum": [
+                        "CREATING",
+                        "ACTIVE",
+                        "DELETING"
+                      ]
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/projects/{projectId}": {
+      "get": {
+        "description": "Describe a project",
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/ContentType"
+          },
+          {
+            "$ref": "#/components/parameters/AdminApiKey"
+          },
+          {
+            "$ref": "#/components/parameters/ProjectId"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Describe project success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/paths/~1projects/post/responses/200/content/application~1json/schema"
+                }
+              }
+            }
+          }
+        }
+      },
+      "delete": {
+        "description": "Delete a project",
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/ContentType"
+          },
+          {
+            "$ref": "#/components/parameters/AdminApiKey"
+          },
+          {
+            "$ref": "#/components/parameters/ProjectId"
+          }
+        ],
+        "responses": {
+          "202": {
+            "description": "Project delete request accepted",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "string",
+                  "default": "Project {projectId} is queued for deletion"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/projects/{projectId}/indexes": {
+      "get": {
+        "description": "List indexes in a project",
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/ContentType"
+          },
+          {
+            "$ref": "#/components/parameters/ProjectApiKey"
+          },
+          {
+            "$ref": "#/components/parameters/ProjectId"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "List indexes success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/paths/~1projects~1%7BprojectId%7D~1indexes/post/responses/202/content/application~1json/schema"
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "description": "Create a index",
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/ContentType"
+          },
+          {
+            "$ref": "#/components/parameters/ProjectApiKey"
+          },
+          {
+            "$ref": "#/components/parameters/ProjectId"
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "indexName": {
+                    "type": "string",
+                    "description": "Index name"
+                  },
+                  "mappings": {
+                    "type": "object",
+                    "additionalProperties": {
+                      "type": "object",
+                      "oneOf": [
+                        {
+                          "properties": {
+                            "type": {
+                              "type": "string",
+                              "enum": [
+                                "text"
+                              ]
+                            },
+                            "analyzers": {
+                              "type": "array",
+                              "description": "Analyzers",
+                              "items": {
+                                "type": "string",
+                                "enum": [
+                                  "standard",
+                                  "korean",
+                                  "japanese",
+                                  "english"
+                                ]
+                              },
+                              "default": "standard"
+                            }
+                          },
+                          "additionalProperties": false,
+                          "required": [
+                            "type"
+                          ]
+                        },
+                        {
+                          "properties": {
+                            "type": {
+                              "type": "string",
+                              "enum": [
+                                "vector"
+                              ]
+                            },
+                            "dimensions": {
+                              "type": "integer",
+                              "description": "Vector dimensions"
+                            },
+                            "similarity": {
+                              "type": "string",
+                              "description": "Vector similarity metric",
+                              "enum": [
+                                "cosine",
+                                "l2_norm",
+                                "dot_product",
+                                "max_inner_product"
+                              ],
+                              "default": "cosine"
+                            }
+                          },
+                          "additionalProperties": false,
+                          "required": [
+                            "type",
+                            "dimensions"
+                          ]
+                        },
+                        {
+                          "properties": {
+                            "type": {
+                              "type": "string",
+                              "enum": [
+                                "keyword",
+                                "long",
+                                "double",
+                                "datetime",
+                                "boolean"
+                              ]
+                            }
+                          },
+                          "description": "Types that do not need additional parameters",
+                          "additionalProperties": false,
+                          "required": [
+                            "type"
+                          ]
+                        }
+                      ]
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "202": {
+            "description": "Index creation request accepted",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "projectId": {
+                      "type": "string",
+                      "description": "Project id"
+                    },
+                    "indexName": {
+                      "type": "string",
+                      "description": "Index name"
+                    },
+                    "mappings": {
+                      "$ref": "#/paths/~1projects~1%7BprojectId%7D~1indexes/post/requestBody/content/application~1json/schema/properties/mappings"
+                    },
+                    "numDocs": {
+                      "type": "integer",
+                      "description": "Number of documents"
+                    },
+                    "indexStatus": {
+                      "type": "string",
+                      "enum": [
+                        "CREATING",
+                        "ACTIVE",
+                        "DELETING"
+                      ],
+                      "description": "Index status"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/projects/{projectId}/indexes/{indexName}": {
+      "delete": {
+        "description": "Delete a index",
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/ContentType"
+          },
+          {
+            "$ref": "#/components/parameters/ProjectApiKey"
+          },
+          {
+            "$ref": "#/components/parameters/ProjectId"
+          },
+          {
+            "$ref": "#/components/parameters/IndexName"
+          }
+        ],
+        "responses": {
+          "202": {
+            "description": "Index delete request accepted",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "string",
+                  "default": "Index {indexName} of project {projectId} is queued for deletion"
+                }
+              }
+            }
+          }
+        }
+      },
+      "get": {
+        "description": "Describe a index",
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/ContentType"
+          },
+          {
+            "$ref": "#/components/parameters/ProjectApiKey"
+          },
+          {
+            "$ref": "#/components/parameters/ProjectId"
+          },
+          {
+            "$ref": "#/components/parameters/IndexName"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Describe index success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/paths/~1projects~1%7BprojectId%7D~1indexes/post/responses/202/content/application~1json/schema"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/projects/{projectId}/indexes/{indexName}/docs/upsert": {
+      "post": {
+        "description": "Upsert Document",
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/ContentType"
+          },
+          {
+            "$ref": "#/components/parameters/ProjectApiKey"
+          },
+          {
+            "$ref": "#/components/parameters/ProjectId"
+          },
+          {
+            "$ref": "#/components/parameters/IndexName"
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "documents": {
+                    "type": "array",
+                    "items": {
+                      "type": "object"
+                    },
+                    "description": "Document list"
+                  }
+                },
+                "required": [
+                  "documents"
+                ]
+              }
+            }
+          }
+        },
+        "responses": {
+          "202": {
+            "description": "Upsert request accepted",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "string",
+                  "default": "Upsert request is accepted"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/projects/{projectId}/indexes/{indexName}/docs/bulk-upsert": {
+      "get": {
+        "description": "Create bulk-upsert presigned url",
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/ContentType"
+          },
+          {
+            "$ref": "#/components/parameters/ProjectApiKey"
+          },
+          {
+            "$ref": "#/components/parameters/ProjectId"
+          },
+          {
+            "$ref": "#/components/parameters/IndexName"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Create bulk-upsert URL",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "url": {
+                      "type": "string",
+                      "description": "Presigned URL"
+                    },
+                    "type": {
+                      "type": "string",
+                      "description": "Content type",
+                      "default": "application/json",
+                      "enum": [
+                        "application/json"
+                      ]
+                    },
+                    "httpMethod": {
+                      "type": "string",
+                      "description": "HTTP method that must be specified when uploading documents",
+                      "default": "PUT",
+                      "enum": [
+                        "PUT"
+                      ]
+                    },
+                    "objectKey": {
+                      "type": "string",
+                      "description": "Object key that needs to be uploaded"
+                    },
+                    "sizeLimitBytes": {
+                      "type": "integer",
+                      "description": "Size limit in bytes",
+                      "default": 209715200
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "description": "Bulk-upsert Document",
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/ContentType"
+          },
+          {
+            "$ref": "#/components/parameters/ProjectApiKey"
+          },
+          {
+            "$ref": "#/components/parameters/ProjectId"
+          },
+          {
+            "$ref": "#/components/parameters/IndexName"
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "objectKey": {
+                    "type": "string",
+                    "description": "Objectkey uploaded through bulk-upsert URL"
+                  }
+                },
+                "required": [
+                  "objectKey"
+                ]
+              }
+            }
+          }
+        },
+        "responses": {
+          "202": {
+            "description": "Bulk-upsert request accepted",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "string",
+                  "default": "Bulk-Upsert request is accepted"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/projects/{projectId}/indexes/{indexName}/docs/delete": {
+      "post": {
+        "description": "Delete Document",
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/ContentType"
+          },
+          {
+            "$ref": "#/components/parameters/ProjectApiKey"
+          },
+          {
+            "$ref": "#/components/parameters/ProjectId"
+          },
+          {
+            "$ref": "#/components/parameters/IndexName"
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "ids": {
+                    "type": "array",
+                    "items": {
+                      "type": "string"
+                    },
+                    "description": "Document ID list",
+                    "example": [
+                      "1",
+                      "2",
+                      "3"
+                    ]
+                  }
+                },
+                "required": [
+                  "ids"
+                ]
+              }
+            }
+          }
+        },
+        "responses": {
+          "202": {
+            "description": "Delete request accepted",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "string",
+                  "default": "Delete request is accepted"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/projects/{projectId}/indexes/{indexName}/docs/fetch": {
+      "post": {
+        "description": "Fetch document",
+        "parameters": [
+          {
+            "$ref": "#/paths/~1projects/get/parameters/0"
+          },
+          {
+            "$ref": "#/paths/~1projects~1%7BprojectId%7D~1indexes/get/parameters/1"
+          },
+          {
+            "$ref": "#/paths/~1projects~1%7BprojectId%7D/get/parameters/2"
+          },
+          {
+            "$ref": "#/paths/~1projects~1%7BprojectId%7D~1indexes~1%7BindexName%7D/get/parameters/3"
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "ids": {
+                    "type": "array",
+                    "items": {
+                      "type": "string"
+                    },
+                    "description": "Document ID list",
+                    "example": [
+                      "1",
+                      "2",
+                      "3"
+                    ]
+                  },
+                  "consistentRead": {
+                    "type": "boolean",
+                    "default": false
+                  },
+                  "includeVectors": {
+                    "type": "boolean",
+                    "default": false
+                  }
+                },
+                "required": [
+                  "ids"
+                ]
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Fetch success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "total": {
+                      "type": "integer",
+                      "description": "Total number of documents returned"
+                    },
+                    "took": {
+                      "type": "integer",
+                      "description": "Elapsed time in milliseconds"
+                    },
+                    "docs": {
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "properties": {
+                          "index": {
+                            "type": "string",
+                            "description": "Index name"
+                          },
+                          "doc": {
+                            "type": "object"
+                          }
+                        },
+                        "required": [
+                          "index",
+                          "doc"
+                        ]
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/projects/{projectId}/indexes/{indexName}/query": {
+      "post": {
+        "description": "Query index",
+        "parameters": [
+          {
+            "$ref": "#/paths/~1projects/get/parameters/0"
+          },
+          {
+            "$ref": "#/paths/~1projects~1%7BprojectId%7D~1indexes/get/parameters/1"
+          },
+          {
+            "$ref": "#/paths/~1projects~1%7BprojectId%7D/get/parameters/2"
+          },
+          {
+            "$ref": "#/paths/~1projects~1%7BprojectId%7D~1indexes~1%7BindexName%7D/get/parameters/3"
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "size": {
+                    "type": "integer",
+                    "description": "Number of documents to return"
+                  },
+                  "query": {
+                    "type": "object",
+                    "description": "Query object"
+                  },
+                  "consistentRead": {
+                    "type": "boolean",
+                    "default": false
+                  },
+                  "includeVectors": {
+                    "type": "boolean",
+                    "default": false
+                  }
+                },
+                "required": [
+                  "size",
+                  "query"
+                ]
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Query success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "took": {
+                      "type": "integer",
+                      "description": "Elapsed time in milliseconds"
+                    },
+                    "maxScore": {
+                      "type": "number",
+                      "description": "Maximum score"
+                    },
+                    "total": {
+                      "type": "integer",
+                      "description": "Total number of documents returned"
+                    },
+                    "docs": {
+                      "type": "array",
+                      "description": "List of documents",
+                      "items": {
+                        "type": "object",
+                        "properties": {
+                          "index": {
+                            "type": "string",
+                            "description": "Index name"
+                          },
+                          "score": {
+                            "type": "number",
+                            "description": "Document similarity score"
+                          },
+                          "doc": {
+                            "type": "object"
+                          }
+                        },
+                        "required": [
+                          "index",
+                          "score",
+                          "doc"
+                        ]
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}
