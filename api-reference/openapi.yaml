@@ -12,9 +12,9 @@
       "variables": {
         "baseUrl": {
           "enum": [
-            "https://qqcyn6e2xc.execute-api.ap-northeast-2.amazonaws.com",
+            "qqcyn6e2xc.execute-api.ap-northeast-2.amazonaws.com",
           ],
-          "default": "https://qqcyn6e2xc.execute-api.ap-northeast-2.amazonaws.com"
+          "default": "qqcyn6e2xc.execute-api.ap-northeast-2.amazonaws.com"
         },
         "version": {
           "enum": [
