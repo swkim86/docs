@@ -1,0 +1,122 @@
+{
+  "$schema": "https://mintlify.com/docs.json",
+  "theme": "mint",
+  "name": "AIMP Documentation",
+  "colors": {
+    "primary": "#0D9373",
+    "light": "#07C983",
+    "dark": "#0D9373"
+  },
+  "favicon": "/favicon.svg",
+  "navigation": {
+    "tabs": [
+      {
+        "tab": "Documentation",
+        "groups": [
+          {
+            "group": "Get Started",
+            "pages": [
+              "introduction",
+              {
+                "group": "Guides",
+                "pages": [
+                  {
+                    "group": "Query DSL",
+                    "pages": [
+                      "guides/query/info",
+                      "guides/query/query",
+                      "guides/query/field-type",
+                      "guides/query/mappings",
+                      {
+                        "group": "Primary Query",
+                        "pages": [
+                          "guides/query/primary-query/query-string",
+                          "guides/query/primary-query/vector"
+                        ]
+                      },
+                      {
+                        "group": "Compound Query",
+                        "pages": [
+                          "guides/query/compound-query/bool",
+                          "guides/query/compound-query/boost",
+                          "guides/query/compound-query/occur",
+                          "guides/query/compound-query/hybrid"
+                        ]
+                      },
+                      "guides/query/query-limits",
+                      "guides/fetch/fetch"
+                    ]
+                  }
+                ]
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "tab": "API Reference",
+        "groups": [
+          {
+            "group": "API Reference",
+            "pages": [
+              "api-reference/introduction",
+              {
+                "group": "Projects",
+                "pages": [
+                  "api-reference/endpoint/project-list",
+                  "api-reference/endpoint/project-create",
+                  "api-reference/endpoint/project-describe",
+                  "api-reference/endpoint/project-delete",
+                  "api-reference/endpoint/project-configure"
+                ]
+              },
+              {
+                "group": "Indexes",
+                "pages": [
+                  "api-reference/endpoint/index-list",
+                  "api-reference/endpoint/index-create",
+                  "api-reference/endpoint/index-describe",
+                  "api-reference/endpoint/index-delete"
+                ]
+              },
+              {
+                "group": "Documents",
+                "pages": [
+                  "api-reference/endpoint/document-upsert",
+                  "api-reference/endpoint/document-get-bulk-upsert-url",
+                  "api-reference/endpoint/document-bulk-upsert",
+                  "api-reference/endpoint/document-query",
+                  "api-reference/endpoint/document-fetch",
+                  "api-reference/endpoint/document-delete"
+                ]
+              }
+            ]
+          }
+        ]
+      }
+    ]
+  },
+  "logo": {
+    "light": "/logo/light.svg",
+    "dark": "/logo/dark.svg"
+  },
+  "navbar": {
+    "links": [
+      {
+        "label": "Support",
+        "href": "mailto:steven@wrtn.io"
+      }
+    ]
+  },
+  "footer": {
+    "socials": {
+      "github": "https://github.com/wrtnlabs",
+      "linkedin": "https://www.linkedin.com/company/wrtn-technologies-inc"
+    }
+  },
+  "api": {
+    "playground": {
+      "display": "simple"
+    }
+  }
+}
