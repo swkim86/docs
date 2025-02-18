@@ -1,4 +1,4 @@
-{
+  {
   "openapi": "3.1.1",
   "info": {
     "title": "Wrtn AIMP API",
@@ -29,7 +29,7 @@
     "parameters": {
       "ContentType": {
         "in": "header",
-        "name": "Content-Type",
+        "name": "content-type",
         "required": true,
         "schema": {
           "type": "string",
@@ -39,26 +39,27 @@
       "AdminApiKey": {
         "in": "header",
         "name": "x-api-key",
-        "description": "Admin API Key",
+        "description": "Admin API Key.",
         "required": true,
         "schema": {
           "type": "string",
-          "description": "Admin API Key"
+          "description": "Admin API Key."
         }
       },
       "ProjectApiKey": {
         "in": "header",
         "name": "x-api-key",
-        "description": "Project API Key",
+        "description": "Project API Key.",
         "required": true,
         "schema": {
           "type": "string",
-          "description": "Project API Key"
+          "description": "Project API Key."
         }
       },
       "ProjectId": {
         "in": "path",
         "name": "projectId",
+        "description": "Project ID.",
         "required": true,
         "schema": {
           "type": "string"
@@ -67,6 +68,7 @@
       "IndexName": {
         "in": "path",
         "name": "indexName",
+        "description": "Index name.",
         "required": true,
         "schema": {
           "type": "string"
@@ -85,7 +87,7 @@
       },
       "IndexClass": {
         "type": "string",
-        "description": "Index class",
+        "description": "Index class.",
         "enum": [
           "STANDARD",
           "INFREQUENT_ACCESS"
@@ -107,7 +109,7 @@
                 },
                 "analyzers": {
                   "type": "array",
-                  "description": "Analyzers",
+                  "description": "Analyzers.",
                   "items": {
                     "type": "string",
                     "enum": [
@@ -135,11 +137,11 @@
                 },
                 "dimensions": {
                   "type": "integer",
-                  "description": "Vector dimensions"
+                  "description": "Vector dimensions."
                 },
                 "similarity": {
                   "type": "string",
-                  "description": "Vector similarity metric",
+                  "description": "Vector similarity metric.",
                   "enum": [
                     "cosine",
                     "l2_norm",
@@ -168,7 +170,7 @@
                   ]
                 }
               },
-              "description": "Types that do not need additional parameters",
+              "description": "Types that do not need additional parameters.",
               "additionalProperties": false,
               "required": [
                 "type"
@@ -182,19 +184,19 @@
         "properties": {
           "id": {
             "type": "string",
-            "description": "Project ID"
+            "description": "Project ID."
           },
           "projectName": {
             "type": "string",
-            "description": "Project name"
+            "description": "Project name."
           },
           "apiKey": {
             "type": "string",
-            "description": "Project API key"
+            "description": "Project API key."
           },
           "rateLimit": {
             "type": "number",
-            "description": "Rate limit"
+            "description": "Rate limit."
           },
           "status": {
             "$ref": "#/components/schemas/Status"
@@ -206,34 +208,34 @@
         "properties": {
           "projectId": {
             "type": "string",
-            "description": "Project ID"
+            "description": "Project ID."
           },
           "indexName": {
             "type": "string",
-            "description": "Index name"
+            "description": "Index name."
           },
           "mappings": {
             "$ref": "#/components/schemas/IndexMappings"
           },
           "numDocs": {
             "type": "integer",
-            "description": "Total number of documents"
+            "description": "Total number of documents."
           },
           "cloneSourceInfo": {
             "type": "object",
-            "description": "Clone source information",
+            "description": "Clone source information.",
             "properties": {
               "sourceProjectId": {
                 "type": "string",
-                "description": "Source project ID"
+                "description": "Source project ID."
               },
               "sourceIndexName": {
                 "type": "string",
-                "description": "Source index name"
+                "description": "Source index name."
               },
               "sourceIndexVersionId": {
                 "type": "string",
-                "description": "Source index version"
+                "description": "Source index version."
               }
             }
           },
@@ -245,12 +247,22 @@
           }
         }
       },
+      "ConsistentRead": {
+        "type": "boolean",
+        "default": false,
+        "description": "If your application requires a strongly consistent read, set consistentRead to true. Although a strongly consistent read might take more time than an eventually consistent read, it always returns the last updated value."
+      },
+      "IncludeVectors": {
+        "type": "boolean",
+        "default": false,
+        "description": "If your application need to include vector values in the response, set includeVectors to true."
+      },
     }
   },
   "paths": {
     "/projects": {
       "get": {
-        "description": "List projects",
+        "description": "List all projects in an account.",
         "parameters": [
           {
             "$ref": "#/components/parameters/ContentType"
@@ -261,7 +273,7 @@
         ],
         "responses": {
           "200": {
-            "description": "A list of projects",
+            "description": "A list of projects.",
             "content": {
               "application/json": {
                 "schema": {
@@ -281,7 +293,7 @@
         }
       },
       "post": {
-        "description": "Create a project",
+        "description": "Create a project.",
         "parameters": [
           {
             "$ref": "#/components/parameters/ContentType"
@@ -297,7 +309,8 @@
                 "type": "object",
                 "properties": {
                   "projectName": {
-                    "type": "string"
+                    "type": "string",
+                    "description": "Displayed project name. Note that the supported maximum length is 45."
                   },
                   "rateLimit": {
                     "type": "number"
@@ -309,7 +322,7 @@
         },
         "responses": {
           "202": {
-            "description": "Created project",
+            "description": "Created project.",
             "content": {
               "application/json": {
                 "schema": {
@@ -323,7 +336,7 @@
     },
     "/projects/{projectId}": {
       "get": {
-        "description": "Describe a project",
+        "description": "Get metadata of an existing project.",
         "parameters": [
           {
             "$ref": "#/components/parameters/ContentType"
@@ -337,7 +350,7 @@
         ],
         "responses": {
           "200": {
-            "description": "Project matched with projectId",
+            "description": "Project matched with a projectId.",
             "content": {
               "application/json": {
                 "schema": {
@@ -349,7 +362,7 @@
         }
       },
       "delete": {
-        "description": "Delete a project",
+        "description": "Delete an existing project.",
         "parameters": [
           {
             "$ref": "#/components/parameters/ContentType"
@@ -363,12 +376,12 @@
         ],
         "responses": {
           "202": {
-            "description": "Project delete request accepted"
+            "description": "Project delete request accepted."
           }
         }
       },
       "patch": {
-        "description": "Configure a project",
+        "description": "Configure an existing project",
         "parameters": [
           {
             "$ref": "#/components/parameters/ContentType"
@@ -399,7 +412,7 @@
         },
         "responses": {
           "200": {
-            "description": "Updated project",
+            "description": "Updated project.",
             "content": {
               "application/json": {
                 "schema": {
@@ -413,7 +426,7 @@
     },
     "/projects/{projectId}/indexes": {
       "get": {
-        "description": "List indexes in a project",
+        "description": "List all indexes in an existing project.",
         "parameters": [
           {
             "$ref": "#/components/parameters/ContentType"
@@ -427,13 +440,13 @@
         ],
         "responses": {
           "200": {
-            "description": "A list of indexes matched with projectId",
+            "description": "A list of indexes matched with a projectId.",
             "content": {
               "application/json": {
                 "schema": {
                   "type": "object",
                   "properties": {
-                    "projects": {
+                    "indexes": {
                       "type": "array",
                       "items": {
                         "$ref": "#/components/schemas/IndexResponse"
@@ -447,7 +460,7 @@
         }
       },
       "post": {
-        "description": "Create an index",
+        "description": "Create an index.",
         "parameters": [
           {
             "$ref": "#/components/parameters/ContentType"
@@ -467,7 +480,8 @@
                 "type": "object",
                 "properties": {
                   "indexName": {
-                    "type": string
+                    "type": string,
+                    "description": "Index name must be unique within a project and the supported maximum length is 52."
                   },
                   "mappings": {
                     "$ref": "#/components/schemas/IndexMappings"
@@ -508,7 +522,7 @@
     },
     "/projects/{projectId}/indexes/{indexName}": {
       "delete": {
-        "description": "Delete a index",
+        "description": "Delete an existing index.",
         "parameters": [
           {
             "$ref": "#/components/parameters/ContentType"
@@ -525,12 +539,12 @@
         ],
         "responses": {
           "202": {
-            "description": "Index delete request accepted"
+            "description": "Index delete request accepted."
           }
         }
       },
       "get": {
-        "description": "Describe a index",
+        "description": "Get metadata of an existing index.",
         "parameters": [
           {
             "$ref": "#/components/parameters/ContentType"
@@ -547,7 +561,7 @@
         ],
         "responses": {
           "200": {
-            "description": "Describe index success",
+            "description": "Describe index success.",
             "content": {
               "application/json": {
                 "schema": {
@@ -561,7 +575,7 @@
     },
     "/projects/{projectId}/indexes/{indexName}/docs/upsert": {
       "post": {
-        "description": "Upsert documents",
+        "description": "Upsert documents into an index. Note that the maximum supported payload size is 6MB.",
         "parameters": [
           {
             "$ref": "#/components/parameters/ContentType"
@@ -588,7 +602,7 @@
                     "items": {
                       "type": "object"
                     },
-                    "description": "A list of documents"
+                    "description": "A list of documents to upsert."
                   }
                 },
                 "required": [
@@ -600,14 +614,14 @@
         },
         "responses": {
           "202": {
-            "description": "Upsert request accepted",
+            "description": "Upsert request accepted.",
           }
         }
       }
     },
     "/projects/{projectId}/indexes/{indexName}/docs/bulk-upsert": {
       "get": {
-        "description": "Request required info to upload documents",
+        "description": "Request required info to upload documents.",
         "parameters": [
           {
             "$ref": "#/components/parameters/ContentType"
@@ -624,7 +638,7 @@
         ],
         "responses": {
           "200": {
-            "description": "Required info to upload documents",
+            "description": "Required info to upload documents.",
             "content": {
               "application/json": {
                 "schema": {
@@ -632,11 +646,11 @@
                   "properties": {
                     "url": {
                       "type": "string",
-                      "description": "Presigned URL"
+                      "description": "Presigned URL."
                     },
                     "type": {
                       "type": "string",
-                      "description": "Content type that must be specified when uploading documents",
+                      "description": "Content type that must be specified when uploading documents.",
                       "default": "application/json",
                       "enum": [
                         "application/json"
@@ -644,7 +658,7 @@
                     },
                     "httpMethod": {
                       "type": "string",
-                      "description": "HTTP method that must be specified when uploading documents",
+                      "description": "HTTP method that must be specified when uploading documents.",
                       "default": "PUT",
                       "enum": [
                         "PUT"
@@ -652,11 +666,11 @@
                     },
                     "objectKey": {
                       "type": "string",
-                      "description": "Object key that must be specified when uploading documents"
+                      "description": "Object key that must be specified when uploading documents."
                     },
                     "sizeLimitBytes": {
                       "type": "integer",
-                      "description": "Object size limit in bytes",
+                      "description": "Object size limit in bytes.",
                       "default": 209715200
                     }
                   }
@@ -667,7 +681,7 @@
         }
       },
       "post": {
-        "description": "Bulk upsert documents",
+        "description": "Bulk upsert documents into an index. Note that the maximum supported object size is 200MB.",
         "parameters": [
           {
             "$ref": "#/components/parameters/ContentType"
@@ -691,7 +705,7 @@
                 "properties": {
                   "objectKey": {
                     "type": "string",
-                    "description": "Object key uploaded based on bulk upsert info"
+                    "description": "Object key uploaded based on bulk upsert info."
                   }
                 },
                 "required": [
@@ -703,14 +717,14 @@
         },
         "responses": {
           "202": {
-            "description": "Bulk upsert request accepted",
+            "description": "Bulk upsert request accepted.",
           }
         }
       }
     },
     "/projects/{projectId}/indexes/{indexName}/docs/delete": {
       "post": {
-        "description": "Delete documents",
+        "description": "Delete documents by document IDs or query filter from an index.",
         "parameters": [
           {
             "$ref": "#/components/parameters/ContentType"
@@ -738,7 +752,7 @@
                         "items": {
                           "type": "string"
                         },
-                        "description": "A list of document IDs",
+                        "description": "A list of document IDs.",
                       }
                     },
                     "required": [
@@ -750,7 +764,7 @@
                     "properties": {
                       "filter": {
                         "type": "object",
-                        "description": "Query filter"
+                        "description": "Query filter."
                       }
                     },
                     "required": [
@@ -764,14 +778,14 @@
         },
         "responses": {
           "202": {
-            "description": "Delete request accepted"
+            "description": "Delete request accepted."
           }
         }
       }
     },
     "/projects/{projectId}/indexes/{indexName}/docs/fetch": {
       "post": {
-        "description": "Fetch documents",
+        "description": "Lookup and return documents by document IDs from an index.",
         "parameters": [
           {
             "$ref": "#/components/parameters/ContentType"
@@ -797,15 +811,13 @@
                     "items": {
                       "type": "string"
                     },
-                    "description": "Document ID list",
+                    "description": "A list of document IDs to fetch. Note that the maximum number of document IDs is 1000.",
                   },
                   "consistentRead": {
-                    "type": "boolean",
-                    "default": false
+                    "$ref": "#/components/schemas/ConsistentRead"
                   },
                   "includeVectors": {
-                    "type": "boolean",
-                    "default": false
+                    "$ref": "#/components/schemas/IncludeVectors"
                   }
                 },
                 "required": [
@@ -817,7 +829,7 @@
         },
         "responses": {
           "200": {
-            "description": "Fetched documents",
+            "description": "Fetched documents.",
             "content": {
               "application/json": {
                 "schema": {
@@ -825,11 +837,11 @@
                   "properties": {
                     "total": {
                       "type": "integer",
-                      "description": "Total number of documents returned"
+                      "description": "Total number of documents returned."
                     },
                     "took": {
                       "type": "integer",
-                      "description": "Elapsed time in milliseconds"
+                      "description": "Elapsed time in milliseconds."
                     },
                     "docs": {
                       "type": "array",
@@ -838,24 +850,14 @@
                         "properties": {
                           "index": {
                             "type": "string",
-                            "description": "Index name"
                           },
                           "doc": {
                             "type": "object"
                           }
                         },
-                        "required": [
-                          "index",
-                          "doc"
-                        ]
                       }
                     }
                   },
-                    "required": [
-                        "total",
-                        "took",
-                        "docs"
-                    ]
                 }
               }
             }
@@ -865,7 +867,7 @@
     },
     "/projects/{projectId}/indexes/{indexName}/query": {
       "post": {
-        "description": "Query index",
+        "description": "Search an index with a query and return the most similar documents.",
         "parameters": [
           {
             "$ref": "#/components/parameters/ContentType"
@@ -888,19 +890,17 @@
                 "properties": {
                   "size": {
                     "type": "integer",
-                    "description": "Number of documents to return"
+                    "description": "Number of documents to return. Note that the maximum number of documents is 1000."
                   },
                   "query": {
                     "type": "object",
-                    "description": "Query object"
+                    "description": "Query object."
                   },
                   "consistentRead": {
-                    "type": "boolean",
-                    "default": false
+                    "$ref": "#/components/schemas/ConsistentRead"
                   },
                   "includeVectors": {
-                    "type": "boolean",
-                    "default": false
+                    "$ref": "#/components/schemas/IncludeVectors"
                   }
                 },
                 "required": [
@@ -913,7 +913,7 @@
         },
         "responses": {
           "200": {
-            "description": "Documents selected by query",
+            "description": "Documents selected by query.",
             "content": {
               "application/json": {
                 "schema": {
@@ -921,48 +921,37 @@
                   "properties": {
                     "took": {
                       "type": "integer",
-                      "description": "Elapsed time in milliseconds"
+                      "description": "Elapsed time in milliseconds."
                     },
                     "maxScore": {
                       "type": "number",
-                      "description": "Maximum score"
+                      "description": "Maximum score."
                     },
                     "total": {
                       "type": "integer",
-                      "description": "Total number of documents returned"
+                      "description": "Total number of documents returned."
                     },
                     "docs": {
                       "type": "array",
-                      "description": "List of documents",
+                      "description": "List of documents.",
                       "items": {
                         "type": "object",
                         "properties": {
                           "index": {
                             "type": "string",
-                            "description": "Index name"
+                            "description": "Index name."
                           },
                           "score": {
                             "type": "number",
-                            "description": "Document similarity score"
+                            "description": "Document similarity score."
                           },
                           "doc": {
                             "type": "object"
                           }
                         },
-                        "required": [
-                          "index",
-                          "score",
-                          "doc"
-                        ]
                       }
                     }
                   },
-                    "required": [
-                        "took",
-                        "maxScore",
-                        "total",
-                        "docs"
-                    ]
                 }
               }
             }

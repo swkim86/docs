@@ -1,0 +1,72 @@
+---
+title: Create an index
+---
+
+This page shows you how to create an index with various configurations.
+
+## Create an index from scratch
+
+The simplest way to create an index is to provide the index name and the field mappings.
+
+```bash
+AIMP_PROJECT_API_KEY="YOUR_API_KEY"
+
+curl "https://qqcyn6e2xc.execute-api.ap-northeast-2.amazonaws.com/v1beta1/projects/{projectId}/indexes" \
+  -H "content-type: application/json" \
+  -H "x-api-key: $AIMP_PROJECT_API_KEY" \
+  -d '{
+        "indexName": "example-std-index",
+        "mappings": {
+          "url": {
+            "type": "keyword"
+          },
+          "author": {
+            "type": "keyword"
+          }
+        }
+      }'
+```
+In this case, the index is created with the standard class configuration by default.
+
+You can change the index class by explicitly providing the `indexClass` parameter.
+
+```bash
+AIMP_PROJECT_API_KEY="YOUR_API_KEY"
+
+curl -i -X POST "https://qqcyn6e2xc.execute-api.ap-northeast-2.amazonaws.com/v1beta1/projects/{projectId}/indexes" \
+  -H "content-type: application/json" \
+  -H "x-api-key: $AIMP_PROJECT_API_KEY" \
+  -d '{
+        "indexName": "example-ia-index",
+        "indexClass": "INFREQUENT_ACCESS",
+        "mappings": {
+          "url": {
+            "type": "keyword"
+          },
+          "author": {
+            "type": "keyword"
+          }
+        }
+      }'
+```
+
+## Create an index cloned from another index
+
+You can create an index cloned from an existing index by simply providing information
+related to the source index.
+
+```bash
+AIMP_TARGET_PROJECT_API_KEY="YOUR_TARGET_API_KEY"
+AIMP_SOURCE_PROJECT_API_KEY="YOUR_SOURCE_API_KEY"
+
+curl "https://qqcyn6e2xc.execute-api.ap-northeast-2.amazonaws.com/v1beta1/projects/{projectId}/indexes" \
+  -H "content-type: application/json" \
+  -H "x-api-key: $AIMP_TARGET_PROJECT_API_KEY" \
+  -d '{
+        "indexName": "example-index",
+        "sourceProjectId": "example-source-project-id",
+        "sourceProjectApiKey": $AIMP_SOURCE_PROJECT_API_KEY,
+        "sourceIndexName": "example-source-index-name"
+      }'
+```
+As shown above example, you cannot specify the `mappings` parameter when cloning an index.

@@ -1,0 +1,81 @@
+---
+title: Manage indexes
+---
+
+This page shows you how to manage your existing indexes.
+
+## List indexes
+
+Use this operation to get a complete description of all indexes in a project:
+
+```bash
+AIMP_PROJECT_API_KEY="YOUR_API_KEY"
+
+curl -i -X GET "https://qqcyn6e2xc.execute-api.ap-northeast-2.amazonaws.com/v1beta1/projects/{projectId}/indexes" \
+  -H "content-type: application/json" \
+  -H "x-api-key: $AIMP_PROJECT_API_KEY"
+```
+
+The response will look like this:
+
+```json
+{
+  "indexes": [
+    {
+      "projectId": "<string>",
+      "indexName": "<string>",
+      "mappings": {},
+      "numDocs": 123,
+      "cloneSourceInfo": {
+        "sourceProjectId": "<string>",
+        "sourceIndexName": "<string>",
+        "sourceIndexVersionId": "<string>"
+      },
+      "indexStatus": "CREATING",
+      "indexClass": "STANDARD"
+    }
+  ]
+}
+```
+
+## Describe an index
+
+Use the describe endpoint to get a complete description of a specific index:
+
+```bash
+AIMP_PROJECT_API_KEY="YOUR_API_KEY"
+
+curl -i -X GET "https://qqcyn6e2xc.execute-api.ap-northeast-2.amazonaws.com/v1beta1/projects/{projectId}/indexes/{indexName}" \
+  -H "content-type: application/json" \
+  -H "x-api-key: $AIMP_PROJECT_API_KEY"
+```
+
+The response will look like this:
+
+```json
+{
+  "projectId": "<string>",
+  "indexName": "<string>",
+  "mappings": {},
+  "numDocs": 123,
+  "cloneSourceInfo": {
+    "sourceProjectId": "<string>",
+    "sourceIndexName": "<string>",
+    "sourceIndexVersionId": "<string>"
+  },
+  "indexStatus": "CREATING",
+  "indexClass": "STANDARD"
+}
+```
+
+## Delete an index
+
+Use this operation to delete an index and all of its associated resources:
+
+```bash
+AIMP_PROJECT_API_KEY="YOUR_API_KEY"
+
+curl -i -X DELETE "https://qqcyn6e2xc.execute-api.ap-northeast-2.amazonaws.com/v1beta1/projects/{projectId}/indexes/{indexName}" \
+  -H "content-type: application/json" \
+  -H "x-api-key: $AIMP_PROJECT_API_KEY"
+```
