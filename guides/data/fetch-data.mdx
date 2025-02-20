@@ -2,48 +2,36 @@
 title: Fetch data
 ---
 
-이미 반환되어야 할 문서의 id를 알고 있는 경우, Fetch를 사용해 Query by id보다 더욱 효율적으로 문서를 가져올 수 있습니다.
+This page shows you how to use the fetch endpoint to fetch documents by ID from an index.
 
-## Parameters
+| Parameter      | Description                                                   | Type       | Required | Default |
+| -------------- | ------------------------------------------------------------- | ---------- | -------- | ------- |
+| ids            | The document IDs to fetch up to 1,000.                        | string[]   | ✓        |         |
+| includeVectors | Indicates whether vector values are included in the response. | boolean    |          | false   |
+| consistentRead | Determines the read consistency model: If set to true, then the operation uses strongly consistent reads; otherwise, the operation uses eventually consistent reads. | boolean          |          | false   |
 
-| Parameter      | Description                                         | Type             | Required | Limitation            | Default |
-| -------------- | --------------------------------------------------- | ---------------- | -------- | --------------------- | ------- |
-| ids            | 가져올 문서의 ID 목록을 지정합니다                  | Array of Strings | ✓        | 0 ≤ array size ≤ 1000 |         |
-| includeVectors | 검색 결과에 벡터 필드를 포함할지 여부를 지정합니다. | Boolean          |          |                       | false   |
-| consistentRead | 일관된 읽기를 사용할지 여부를 지정합니다.           | Boolean          |          |                       | false   |
+To fetch documents, specify the document IDs.
 
-## Example
-
-```python
-url = f"{base_url}/{api_version}/projects/{project_id}/indexes/{index_name}/query"
-headers = {"content-type" : "application/json", "x-api-key" : f"{your_api_key}"}
+```python python
+url = f"https://{base_url}/{api_version}/projects/{project_id}/indexes/{index_name}/query"
+headers = {"content-type" : "application/json", "x-api-key" : f"{YOUR_API_KEY}"}
 
 fetch = {
-	"ids": ["33201222", "31201452"]
+	"ids": ["33201222"]
 }
 
 r = requests.post(url, headers=headers, json=fetch)
 ```
-
-## Fetch Result
-
-| Field | Description                                                                                              | Type       |
-| ----- | -------------------------------------------------------------------------------------------------------- | ---------- |
-| took  | 검색에 소요된 시간(ms)을 나타냅니다.                                                                     | long       |
-| total | 검색 조건과 일치하는 총 문서 수를 나타냅니다. total의 값은 ids array의 size보다 작거나 같을 수 있습니다. | long       |
-| docs  | 검색된 문서들의 배열입니다.                                                                              | Document[] |
+The response will look like this:
 
 ```json
-// Fetch Result Example
-
 {
   "took": 76,
-  "maxScore": 10.691499,
   "total": 1,
   "docs": [
     {
-      "index": "wiki_index",
-      "score": null, // 항상 null로 표시
+      "index": "example_index",
+      "score": 1.0,
       "doc": {
         "id": "33201222",
         "url": "https://en.wikipedia.org/wiki/AIMP",
@@ -54,7 +42,3 @@ r = requests.post(url, headers=headers, json=fetch)
   ]
 }
 ```
-
-## Fetch Limits
-
-- max fetch id size limit : 1000

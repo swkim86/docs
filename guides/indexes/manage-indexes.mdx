@@ -11,7 +11,7 @@ Use this operation to get a complete description of all indexes in a project:
 ```bash
 AIMP_PROJECT_API_KEY="YOUR_API_KEY"
 
-curl -i -X GET "https://qqcyn6e2xc.execute-api.ap-northeast-2.amazonaws.com/v1beta1/projects/{projectId}/indexes" \
+curl -i -X GET "https://{baseUrl}/{apiVersion}/projects/{projectId}/indexes" \
   -H "content-type: application/json" \
   -H "x-api-key: $AIMP_PROJECT_API_KEY"
 ```
@@ -31,7 +31,7 @@ The response will look like this:
         "sourceIndexName": "<string>",
         "sourceIndexVersionId": "<string>"
       },
-      "indexStatus": "CREATING",
+      "indexStatus": "ACTIVE",
       "indexClass": "STANDARD"
     }
   ]
@@ -45,7 +45,7 @@ Use the describe endpoint to get a complete description of a specific index:
 ```bash
 AIMP_PROJECT_API_KEY="YOUR_API_KEY"
 
-curl -i -X GET "https://qqcyn6e2xc.execute-api.ap-northeast-2.amazonaws.com/v1beta1/projects/{projectId}/indexes/{indexName}" \
+curl -i -X GET "https://{baseUrl}/{apiVersion}/projects/{projectId}/indexes/{indexName}" \
   -H "content-type: application/json" \
   -H "x-api-key: $AIMP_PROJECT_API_KEY"
 ```
@@ -63,7 +63,7 @@ The response will look like this:
     "sourceIndexName": "<string>",
     "sourceIndexVersionId": "<string>"
   },
-  "indexStatus": "CREATING",
+  "indexStatus": "ACTIVE",
   "indexClass": "STANDARD"
 }
 ```
@@ -75,7 +75,7 @@ Use this operation to delete an index and all of its associated resources:
 ```bash
 AIMP_PROJECT_API_KEY="YOUR_API_KEY"
 
-curl -i -X DELETE "https://qqcyn6e2xc.execute-api.ap-northeast-2.amazonaws.com/v1beta1/projects/{projectId}/indexes/{indexName}" \
+curl -i -X DELETE "https://{baseUrl}/{apiVersion}/projects/{projectId}/indexes/{indexName}" \
   -H "content-type: application/json" \
   -H "x-api-key: $AIMP_PROJECT_API_KEY"
 ```

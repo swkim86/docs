@@ -4,18 +4,11 @@ title: Upsert data
 
 This page shows you how to upsert documents into an index.
 
-<Warning>
-
-  AIMP is eventually consistent, so there can be a slight delay before new or changed records are visible to queries.
-  If your application requires consistent read, use `consistentRead` parameter when query your data.
-
-</Warning>
-
 ```bash
 AIMP_PROJECT_API_KEY="YOUR_API_KEY"
 
 curl -X POST \
-  "https://qqcyn6e2xc.execute-api.ap-northeast-2.amazonaws.com/v1beta1/projects/{project_id}/indexes/{index_name}/docs/upsert" \
+  "https://{baseUrl}/{apiVersion}/projects/{project_id}/indexes/{index_name}/docs/upsert" \
   -H 'content-type: application/json
   -H 'x-api-key: $AIMP_PROJECT_API_KEY' \
   -d '{

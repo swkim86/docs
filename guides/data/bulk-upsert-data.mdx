@@ -10,8 +10,8 @@ First, get the required information to upload payload to object storage:
 ```bash
 AIMP_PROJECT_API_KEY="YOUR_API_KEY"
 
-curl -X GET \
-  "https://qqcyn6e2xc.execute-api.ap-northeast-2.amazonaws.com/v1beta1/projects/{project_id}/indexes/{index_name}/docs/bulk-upsert" \
+curl -i -X GET \
+  "https://{baseUrl}/{apiVersion}/projects/{project_id}/indexes/{index_name}/docs/bulk-upsert" \
   -H 'content-type: application/json' \
   -H 'x-api-key: $AIMP_PROJECT_API_KEY'
 ```
@@ -34,8 +34,8 @@ and call `bulk-upsert` API with the corresponding `objectKey` you've just upload
 ```bash
 AIMP_PROJECT_API_KEY="YOUR_API_KEY"
 
-curl -X POST \
-  "https://qqcyn6e2xc.execute-api.ap-northeast-2.amazonaws.com/v1beta1/projects/{project_id}/indexes/{index_name}/docs/bulk-upsert" \
+curl -i -X POST \
+  "https://{baseUrl}/{apiVersion}/projects/{project_id}/indexes/{index_name}/docs/bulk-upsert" \
   -H 'content-type: application/json' \
   -H 'x-api-key: $AIMP_PROJECT_API_KEY' \
   -d '{

@@ -2,8 +2,28 @@
 title: Create a project
 ---
 
-## Create an index from scratch
+This page describes how to create a project.
 
-Standard, infrequent access
+```bash
+AIMP_ADMIN_API_KEY="ADMIN_API_KEY"
 
-## Create an index cloned from another index
+curl -i -X POST "https://{baseUrl}/{apiVersion}/projects" \
+  -H "content-type: application/json" \
+  -H "x-api-key: $AIMP_ADMIN_API_KEY" \
+  -d '{
+        "projectName": "example-project",
+        "rateLimit": 10.0
+      }'
+```
+
+The response will look like this:
+
+```json
+{
+  "id": "<string>",
+  "projectName": "example-project",
+  "apiKey": "<string>",
+  "rateLimit": 10.0,
+  "status": "CREATING"
+}
+```

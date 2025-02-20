@@ -11,7 +11,7 @@ The simplest way to create an index is to provide the index name and the field m
 ```bash
 AIMP_PROJECT_API_KEY="YOUR_API_KEY"
 
-curl "https://qqcyn6e2xc.execute-api.ap-northeast-2.amazonaws.com/v1beta1/projects/{projectId}/indexes" \
+curl -i -X POST "https://{baseUrl}/{apiVersion}/projects/{projectId}/indexes" \
   -H "content-type: application/json" \
   -H "x-api-key: $AIMP_PROJECT_API_KEY" \
   -d '{
@@ -33,7 +33,7 @@ You can change the index class by explicitly providing the `indexClass` paramete
 ```bash
 AIMP_PROJECT_API_KEY="YOUR_API_KEY"
 
-curl -i -X POST "https://qqcyn6e2xc.execute-api.ap-northeast-2.amazonaws.com/v1beta1/projects/{projectId}/indexes" \
+curl -i -X POST "https://{baseUrl}/{apiVersion}/projects/{projectId}/indexes" \
   -H "content-type: application/json" \
   -H "x-api-key: $AIMP_PROJECT_API_KEY" \
   -d '{
@@ -59,7 +59,7 @@ related to the source index.
 AIMP_TARGET_PROJECT_API_KEY="YOUR_TARGET_API_KEY"
 AIMP_SOURCE_PROJECT_API_KEY="YOUR_SOURCE_API_KEY"
 
-curl "https://qqcyn6e2xc.execute-api.ap-northeast-2.amazonaws.com/v1beta1/projects/{projectId}/indexes" \
+curl -i -X POST "https://{baseUrl}/{apiVersion}/projects/{projectId}/indexes" \
   -H "content-type: application/json" \
   -H "x-api-key: $AIMP_TARGET_PROJECT_API_KEY" \
   -d '{
