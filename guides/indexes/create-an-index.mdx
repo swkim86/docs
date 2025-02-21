@@ -69,4 +69,6 @@ curl -i -X POST "https://{baseUrl}/{apiVersion}/projects/{projectId}/indexes" \
         "sourceIndexName": "example-source-index-name"
       }'
 ```
-As shown above example, you cannot specify the `mappings` parameter when cloning an index.
+As shown above example, specifying `mappings` is optional when cloning an index.
+You can pass `mappings` object only with additional mappings based on the original index's mappings.
+Deleting or modifying the original index's mappings is not allowed.

@@ -71,7 +71,8 @@
                   "api-reference/endpoint/index-list",
                   "api-reference/endpoint/index-create",
                   "api-reference/endpoint/index-describe",
-                  "api-reference/endpoint/index-delete"
+                  "api-reference/endpoint/index-delete",
+                  "api-reference/endpoint/index-configure"
                 ]
               },
               {
