@@ -319,6 +319,76 @@ that calculates the scores of the top 5 most similar documents with a boost of 0
 
 </Warning>
 
+## Sort search results
+
+AIMP allows you to add one or more sorts on specific fields. Each sort can be reversed as well.
+The sort is defined on a per field level.
+
+<Note>
+
+  Sorting can be done on the following data types:
+  * `long`
+  * `double`
+  * `datetime`
+
+</Note>
+
+The sort order option can have the following values:
+
+ * `asc`: sorts in ascending order
+ * `desc`: sorts in descending order
+
+Assuming the following index mapping:
+
+```json
+{
+  "mappings": {
+    "post_date": {
+      "type": "datetime"
+    },
+    "user": {
+      "type": "keyword"
+    },
+    "name": {
+      "type": "keyword"
+    },
+    "age": {
+      "type": "integer"
+    }
+  }
+}
+```
+
+You can sort search results as follows:
+
+```json
+{
+  "query" : {
+    "term" : { "user" : "kimchy" }
+  },
+  "sort" : [
+    { "post_date" : "desc" },
+    { "age" : "desc" }
+  ]
+}
+```
+
+When sorting on a field, scores are not computed. By setting `trackScores` to true,
+scores will still be computed and tracked.
+
+```json
+{
+  "query" : {
+    "term" : { "user" : "kimchy" }
+  },
+  "sort" : [
+    { "name" : "asc" },
+    { "age" : "desc" }
+  ],
+  "trackScores": true
+}
+```
+
 ## Query limits
 
 | Metric              | Limit  |

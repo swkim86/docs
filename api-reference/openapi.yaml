@@ -948,11 +948,22 @@
                   },
                   "includeVectors": {
                     "$ref": "#/components/schemas/IncludeVectors"
+                  },
+                  "sort": {
+                    "type": "array",
+                    "description": "List of field name, sort direction pairs.",
+                    "items": {
+                      "type": "object"
+                    }
+                  },
+                  "trackScores": {
+                    "type": "boolean",
+                    "description": "If your application needs to track scores with sorting, set trackScores to true.",
+                    "default": false
                   }
                 },
                 "required": [
-                  "size",
-                  "query"
+                  "size"
                 ]
               }
             }
